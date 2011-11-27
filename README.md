@@ -1,6 +1,3 @@
-11212
-
-
 # CodeIgniter-RestServer
 
 A fully RESTful server implementation for CodeIgniter using one library, one
