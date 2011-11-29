@@ -1,18 +1,14 @@
 <?php
 
+class Location_model extends MY_Model {
 
-class Location_model extends CI_Model{
+	protected $_table = 'locations';
 
+	public function getLocationInfo($loc_id) {
+		$this->db->select('name', 'address', 'like', 'checkin');
+		$this->db->from('locations')->where('id', $loc_id);
+		$this->db->limit(1);
 
-	public function __construct(){
-		$this->load->database();
-	}
-
-
-	public function add($name, $longitude,$latitude,$owner_id,$address){
-		$data = array('name' => $name, 'longitude' => $longitude, 'latitude' => $latitude, 'owner_id' => $owner_id, 'address' => $address);
-		$this->db->insert('locations', $data);
-
-		return $this->db->insert_id();
+		return $this->db->get()->row();
 	}
 }

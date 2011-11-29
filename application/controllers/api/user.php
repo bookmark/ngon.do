@@ -88,7 +88,7 @@ class User extends REST_Controller
 		// unset variable
 		unset($username, $username_length, $password, $password_length, $phone, $salt);
 
-		$this->response(array('status' => true, 'user_id' => $user_id), 200);
+		$this->response(array('status' => true, 'user_id' => $user_id), 201);
 	}
 
 }
