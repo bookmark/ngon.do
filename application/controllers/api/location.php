@@ -13,6 +13,8 @@ class Location extends REST_Controller {
 		$this->load->model('api/Dish_model', 'dish');
 		$this->load->model('api/History_model', 'history');
 		$this->load->model('api/Review_model', 'review');
+		$this->load->model('api/Search_model', 'search');
+		$this->load->database();
 	}
 
 	/**
@@ -21,6 +23,23 @@ class Location extends REST_Controller {
 	 */
 
 	public function index_put() {
+		$user_id = 1;
+		$long = $this->put('long');
+		$lat = $this->put('lat');
+		$name = $this->put('name');
+
+		$data = array('owner_id' => $user_id, 'longitude' => $long, 'latitude' => $lat, 'name' => $name);
+		$location_id = $this->location->insert($data);
+
+		$this->response(array('location_id' => $location_id), 200);
+	}
+
+	/**
+	 * Search location by name or dish name
+	 */
+	public function search_get() {
+		$user_id = 1;
+		$name = $this->get('name');
 
 	}
 
@@ -31,6 +50,15 @@ class Location extends REST_Controller {
 
 	public function nearby_get() {
 
+		$name = $this->get('name');
+		$user_id = 1;
+		$limit = 10;
+		$long = $this->get('long');
+		$lat = $this->get('lat');
+
+		$search_result = $this->search->searchNameOrDish($name, $user_id, $long, $lat, $limit);
+
+		$this->response($search_result, 200);
 	}
 
 	/**

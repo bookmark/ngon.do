@@ -8,4 +8,13 @@ class Dish extends REST_Controller {
 		//load model
 		$this->load->model('api/Dish_model', 'dish');
 	}
+
+	/**
+	 *
+	 * Search dish by name
+	 */
+
+	public function search_get() {
+
+	}
 }

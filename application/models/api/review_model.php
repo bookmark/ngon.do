@@ -1,6 +1,6 @@
 <?php
 
-class Review extends MY_Model {
+class Review_model extends MY_Model {
 
 	protected $_table = 'reviews';
 
