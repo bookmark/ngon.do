@@ -11,4 +11,8 @@ class Photo_model extends MY_Model {
 
 		return $this->db->get();
 	}
+
+	public function tagDishWithPhoto($photo_id, $dish_id) {
+		$this->db->insert('photo_dish', array('photo_id' => $photo_id, 'dish_id' => $dish_id));
+	}
 }

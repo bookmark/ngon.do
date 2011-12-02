@@ -11,4 +11,18 @@ class Dish_model extends MY_Model {
 
 		return $this->db->get();
 	}
+
+	/**
+	 *
+	 * Check dish exist
+	 * @param string dish_name
+	 *
+	 * @return true: if already exist, false is not exist
+	 */
+
+	public function checkDishExist($dish_name) {
+		$this->db->select()->from($this->_table)->where('name', $dish_name)->limit(1);
+		return (bool) $this->db->count_all_results();
+	}
+
 }

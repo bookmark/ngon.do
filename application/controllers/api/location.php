@@ -14,7 +14,6 @@ class Location extends REST_Controller {
 		$this->load->model('api/History_model', 'history');
 		$this->load->model('api/Review_model', 'review');
 		$this->load->model('api/Search_model', 'search');
-		$this->load->database();
 	}
 
 	/**
@@ -66,7 +65,15 @@ class Location extends REST_Controller {
 	 */
 
 	public function checkin_put() {
+		$user_id = 1;
+		$loc_id = intval($this->put('location_id'));
 
+		if ($loc_id > 0) {
+			$this->history->insert(array('user_id' => $user_id, 'location_id' => $loc_id));
+			$this->response(array('status' => true), 200);
+		} else {
+			$this->response(array('status' => false), 404);
+		}
 	}
 
 	/**

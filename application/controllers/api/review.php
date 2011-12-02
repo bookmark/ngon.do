@@ -16,6 +16,9 @@ class Review extends REST_Controller {
 		$loc_id = $this->get('location_id');
 	}
 
+	/**
+	 * Create review
+	 */
 	public function index_put() {
 
 		$user_id = 1;
@@ -30,5 +33,14 @@ class Review extends REST_Controller {
 		} else {
 			$this->response(array('status' => false), 404);
 		}
+	}
+
+	/**
+	 * Edit review
+	 */
+
+	public function index_post() {
+		$user_id = 1;
+		$review_id = intval($this->post('review_id'));
 	}
 }
