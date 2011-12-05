@@ -23,14 +23,96 @@ class Location extends REST_Controller {
 
 	public function index_put() {
 		$user_id = 1;
-		$long = $this->put('long');
-		$lat = $this->put('lat');
-		$name = $this->put('name');
+		$require_param = array('name', 'long', 'lat');
 
-		$data = array('owner_id' => $user_id, 'longitude' => $long, 'latitude' => $lat, 'name' => $name);
-		$location_id = $this->location->insert($data);
+		// check require parametter
+		foreach ($require_param as $param) {
+			if (false == array_key_exists($param, $this->put())) {
+				$this->response(array('status' => false, 'error' => $param.' is not exist'), 405);
+				return;
+			}
+		}
+
+		$long = floatval($this->put('long'));
+		$lat = floatval($this->put('lat'));
+		$name = $this->put('name');
+		$location_id = $this->location->create($user_id, $name, $long, $lat);
 
 		$this->response(array('location_id' => $location_id), 200);
+	}
+
+	public function test_get() {
+		set_time_limit(0);
+
+		$num_record = 1000000;
+
+		for ($i = 1; $i < $num_record; $i++) {
+			$long = rand(1, 200);
+			$lat = rand(1,200);
+			$name = 'Test '.$i;
+			$this->location->create(1, $name, $long, $lat);
+		}
+	}
+
+	public function review_get() {
+		$loc_id = intval($this->get('location_id'));
+		$limit = $this->get('limit');
+		$limit = $limit == null ? 10 : intval($limit);
+
+		if ($loc_id == 0) {
+			$this->response(array('status' => false), 404);
+		}
+
+		$reviews = $this->review->getReviewsByLocation($loc_id, 5);
+		$this->response(array('status' => true, 'data' => $reviews), 200);
+	}
+
+	public function photo_get() {
+		$loc_id = intval($this->get('location_id'));
+		$limit = $this->get('limit');
+		$limit = $limit == null ? 10 : intval($limit);
+
+		if ($loc_id == 0) {
+			$this->response(array('status' => false), 404);
+		}
+
+		$photos = $this->photo->getPhotosByLocationId($loc_id, 10);
+		$this->response(array('status' => true, 'data' => $photos), 200);
+	}
+
+	public function menu_get() {
+		$loc_id = intval($this->get('location_id'));
+
+		if ($loc_id == 0) {
+			$this->response(array('status' => false), 404);
+		}
+
+		$menu = $this->dish->getMenuByLocationId($loc_id);
+		$this->response(array('status' => true, 'data' => $menu), 200);
+	}
+
+	public function toplike_get() {
+		$limit = $this->get('limit');
+		$limit = $limit == null ? 10 : intval($limit);
+
+		$data = $this->location->getTopLike($limit);
+		$this->response($data, 200);
+	}
+
+	public function topcheckin_get() {
+		$limit = $this->get('limit');
+		$limit = $limit == null ? 10 : intval($limit);
+
+		$data = $this->location->getTopCheckin($limit);
+		$this->response($data, 200);
+	}
+
+	public function topnew_get() {
+		$limit = $this->get('limit');
+		$limit = $limit == null ? 10 : intval($limit);
+
+		$data = $this->location->getTopNew($limit);
+		$this->response($data, 200);
 	}
 
 	/**
@@ -68,12 +150,13 @@ class Location extends REST_Controller {
 		$user_id = 1;
 		$loc_id = intval($this->put('location_id'));
 
-		if ($loc_id > 0) {
-			$this->history->insert(array('user_id' => $user_id, 'location_id' => $loc_id));
-			$this->response(array('status' => true), 200);
-		} else {
+		if ($loc_id == 0 || $this->location->checkLocationIdExist($loc_id)) {
 			$this->response(array('status' => false), 404);
 		}
+
+		$this->history->insert(array('user_id' => $user_id, 'location_id' => $loc_id));
+		$this->location->updateCheckinNumber($loc_id);
+		$this->response(array('status' => true), 200);
 	}
 
 	/**
@@ -86,12 +169,9 @@ class Location extends REST_Controller {
 
 		if ($loc_id > 0) {
 			$info = $this->location->getLocationInfo($loc_id);
-			$photos = $this->photo->getPhotosByLocationId($loc_id, 10); //limit 10 photos
-			$menu = $this->dish->getMenuByLocationId($loc_id);
-			$reviews = $this->review->getReviewsByLocation($loc_id, 5);
 			$latest_history = $this->history->getLatestHistoryFromLocationId($user_id, $loc_id);
 
-			$data = array('status' => true, 'info' => $info, 'photos' => $photos, 'menu' => $menu, 'reviews' => $reviews, 'latest_history' => $latest_history->created_datetime);
+			$data = array('status' => true, 'info' => $info, 'latest_history' => $latest_history->created_datetime);
 
 			$this->response($data, 200);
 		} else {

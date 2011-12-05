@@ -1,13 +1,9 @@
 <?php
 
-require APPPATH . '/libraries/REST_Controller.php';
-
-class User extends REST_Controller
-{
+class User extends REST_Controller {
 	private $require_param = array('username', 'password', 'phone');
 
-	public function __construct ()
-	{
+	public function __construct() {
 		parent::__construct();
 
 		//load model
@@ -16,13 +12,15 @@ class User extends REST_Controller
 		$this->load->helper('valid');
 	}
 
+	public function me_get() {
+
+	}
+
 	/**
 	 * Get profile by user_id
-	 * Enter description here ...
 	 */
 
-	public function profile_get ()
-	{
+	public function profile_get() {
 		$user_id = intval($this->get('id'));
 
 		if ($user_id == 0)
@@ -36,12 +34,11 @@ class User extends REST_Controller
 	 * Create user
 	 */
 
-	public function index_put ()
-	{
+	public function index_put() {
 		// check require parametter
 		foreach ($this->require_param as $param) {
 			if (false == array_key_exists($param, $this->put())) {
-				$this->response(array('status' => false, 'error' => $param . ' is not exist'), 405);
+				$this->response(array('status' => false, 'error' => $param.' is not exist'), 405);
 				return;
 			}
 		}
