@@ -42,7 +42,7 @@ class Photo extends REST_Controller {
 			$insert_data = array('user_id' => $user_id, 'location_id' => $loc_id, 'file_name' => $file_name);
 			$photo_id = $this->photo->insert($insert_data);
 
-			$dishes = $this->post('dishes') != null ? explode(',', $this->post('dishes')) : array();
+			$dishes = $this->post('dishes') != null ? array_unique(explode(',', $this->post('dishes'))) : array();
 
 			foreach ($dishes as $dish) {
 				$this->photo->tagDishWithPhoto($photo_id, $dish);

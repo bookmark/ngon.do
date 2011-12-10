@@ -16,7 +16,7 @@ class Dish extends REST_Controller {
 	}
 
 	public function index_put() {
-		$dish_name = $this->put('name');
+		$dish_name = trim($this->put('name'));
 		$length = strlen($dish_name);
 
 		//valid dish name

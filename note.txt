@@ -1,0 +1,7 @@
+// mysql distance  function 
+
+CREATE FUNCTION `distance`(a POINT, b POINT)RETURNS double DETERMINISTIC BEGIN RETURN round(glength(linestringfromwkb(linestring(asbinary(a),asbinary(b))))); END $$
+
+
+
+SELECT name,( GLength( LineString(( PointFromWKB( location)), ( PointFromWKB( location  ))))) * 100 AS distance FROM locations;
