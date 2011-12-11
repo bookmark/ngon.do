@@ -21,9 +21,9 @@ class History extends REST_Controller {
 
 	public function index_put() {
 		$user_id = 1;
-		$location_id = $this->put('location_id');
+		$spot_id = $this->put('spot_id');
 
-		$history_id = $this->history->insert(array('user_id' => $user_id, 'location_id' => $location_id));
+		$history_id = $this->history->insert(array('user_id' => $user_id, 'spot_id' => $spot_id));
 
 		$this->response(array('history_id' => $history_id));
 	}

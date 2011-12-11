@@ -7,14 +7,6 @@ class Dish extends REST_Controller {
 		$this->load->model('api/Dish_model', 'dish');
 	}
 
-	/**
-	 * Search dish by name
-	 */
-
-	public function search_get() {
-
-	}
-
 	public function index_put() {
 		$dish_name = trim($this->put('name'));
 		$length = strlen($dish_name);

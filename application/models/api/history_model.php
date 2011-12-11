@@ -12,4 +12,16 @@ class History_model extends MY_Model {
 
 		return $this->db->get()->row();
 	}
+
+	public function getHistoryDetail($user_id, $limit = 0) {
+		$this->db->select(array('history.spots_id', 'name', 'history.created_datetime', 'dishes'))->from($this->_table);
+		$this->db->join('spots', 'spots.id = history.spot_id');
+		$this->db->where('user_id', $user_id);
+		$this->db->order_by('history.created_datetime', 'desc');
+		if ($limit > 0) {
+			$this->db->limit($limit);
+		}
+
+		return $this->db->get();
+	}
 }

@@ -18,4 +18,15 @@ class Like_model extends MY_Model {
 		return (bool) $this->db->count_all_results();
 	}
 
+	public function getLikeDetail($user_id, $limit = 0) {
+		$this->db->select(array('likes.spot_id', 'name', 'likes.created_datetime'))->from($this->_table);
+		$this->db->join('spots', 'spots.id = likes.spot_id');
+		$this->db->where('user_id', $user_id);
+		$this->db->order_by('likes.created_datetime', 'desc');
+		if ($limit > 0) {
+			$this->db->limit($limit);
+		}
+
+		return $this->db->get();
+	}
 }
